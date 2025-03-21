@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import {styles} from './styles';
 
 import summer from './assets/Images/weather app-sunny.jpg';
@@ -16,6 +16,11 @@ const Weather = () => {
     const fetchWeather= async ()=>
     {
         try{
+            if(!city.trim())
+            {
+                Alert.alert('Enter City Name');
+                return
+            }
             const API='c09bc15c037f0547e81316578d82bbac';
             const wetaherapi=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API}&units=metric`
             const wresponse=await fetch(wetaherapi);
@@ -24,6 +29,12 @@ const Weather = () => {
             const forecastapi=`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API}&units=metric`
             const fresponse=await fetch(forecastapi);
             const fdata= await fresponse.json();
+
+            if(wdata.cod !== 200)
+            {
+                Alert.alert('Enter Valid City Name');
+                return
+            }
 
             setForecastData(fdata);
             setWeatherData(wdata);
